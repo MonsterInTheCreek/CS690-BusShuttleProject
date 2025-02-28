@@ -6,8 +6,9 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.Write("Please select mode (driver or manager): ");
-        string mode = Console.ReadLine();
+        FileSaver fileSaver = new FileSaver("passenger-data.txt");
+
+        string mode = AskForInput("Please select mode (driver or manager): ");
 
         if (mode == "driver")
         {
@@ -16,23 +17,38 @@ class Program
             do 
             {
 
-                Console.Write("Enter stop name: ");
-                string stopName = Console.ReadLine();
+                string stopName = AskForInput("Enter stop name: ");
 
-                Console.Write("Enter number of boarded passengers: ");
-                int boarded = int.Parse(Console.ReadLine());
+                int boarded = int.Parse(AskForInput("Enter number of boarded passengers: "));
 
-                File.AppendAllText("passenger-data.txt", stopName + ":" + boarded + Environment.NewLine);
+                fileSaver.AppendLine(stopName + ":" + boarded);
 
-                Console.Write("Enter command (end or continue): ");
-                command = Console.ReadLine();
+                command = AskForInput("Enter command (end or continue): ");
 
             } while (command != "end");
 
         }
+    }
 
+    public static string AskForInput (string message)
+    {
+        Console.Write(message);
+        return Console.ReadLine();
+    }
+}
 
+public class FileSaver 
+{
+    string fileName;
 
+    public FileSaver(string fileName)       // Constructor
+    {
+        this.fileName = fileName;
+        File.Create(this.fileName).Close();
+    }
 
+    public void AppendLine(string line)
+    {
+       File.AppendAllText(this.fileName, line + Environment.NewLine); 
     }
 }
