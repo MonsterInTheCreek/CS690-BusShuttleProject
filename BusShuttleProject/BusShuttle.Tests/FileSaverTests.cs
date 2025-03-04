@@ -10,6 +10,10 @@ public class FileSaverTests
     public FileSaverTests()
     {
         testFileName = "test-doc.txt";
+        if (File.Exists(testFileName))
+        {
+            File.Delete(testFileName);
+        }
         fileSaver = new FileSaver(testFileName);
     }
 
