@@ -17,7 +17,8 @@ public class ConsoleUI
         var mode = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("Please select mode")
-                .AddChoices(new[] {
+                .AddChoices(new[] 
+                {
                     "driver", "manager"                
                 }));
 
@@ -56,18 +57,56 @@ public class ConsoleUI
                 command = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("What's next?")
-                        .AddChoices(new[] {
+                        .AddChoices(new[] 
+                        {
                             "continue", "end"                
                         }));
 
             } while (command != "end");
+
+        } else if (mode == "manager")
+        {
+            string command;
+            do
+            {
+                
+                command = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("What do you want to do?")
+                        .AddChoices(new[] 
+                        {
+                            "add stop", "delete stop", "list stops", "end"
+                        }));
+
+                if (command == "add stop")
+                {
+
+                    var newStopName = AnsiConsole.Prompt(new TextPrompt<string>("Enter new stop name:"));
+                    dataManager.AddStop(new Stop(newStopName));
+
+                } else if (command == "delete stop")
+                {
+
+                    Stop selectedStop = AnsiConsole.Prompt(
+                        new SelectionPrompt<Stop>()
+                            .Title("Select a stop")
+                            .AddChoices(dataManager.Stops));
+                    dataManager.RemoveStop(selectedStop);
+
+                } else if (command == "list stops")
+                {
+
+                    var table = new Table();
+                    table.AddColumn("Stops");
+                    foreach (var stop in dataManager.Stops)
+                    {
+                        table.AddRow(stop.Name);
+                    }                    
+                    AnsiConsole.Write(table);
+
+                }
+
+            } while (command != "end");
         }
     }
-
-    // public static string AskForInput (string message)
-    // // prof rewrote above to no longer need this function, yet didn't actually remove it even though it isn't used...
-    // {
-    //     Console.Write(message);
-    //     return Console.ReadLine();
-    // }
 }

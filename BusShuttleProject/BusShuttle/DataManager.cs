@@ -22,14 +22,13 @@ public class DataManager
             new Loop("Blue"),
         };
 
-        Stops = new List<Stop>
+        Stops = new List<Stop>();
+        var stopsFileContent = File.ReadAllLines("stops.txt");
+
+        foreach (var stopName in stopsFileContent)
         {
-            new Stop("Music"), 
-            new Stop("Tower"), 
-            new Stop("Oakwood"), 
-            new Stop("Anthony"), 
-            new Stop("Letterman"),
-        };
+            Stops.Add(new Stop(stopName));
+        }
 
         Loops[0].Stops.AddRange(new List<Stop>
         // does not yet include stops for Green or Blue loops yet, for some reason...
@@ -56,6 +55,25 @@ public class DataManager
         this.fileSaver.AppendData(data);
     }
 
+    public void SynchronizeStops()
+    {
+        File.Delete("stops.txt");
+        foreach (var stop in Stops)
+        {
+            File.AppendAllText("stops.txt", stop.Name + Environment.NewLine);
+        }
+    }
 
+    public void AddStop(Stop stop)
+    {
+        Stops.Add(stop);
+        SynchronizeStops();
+    }
+
+    public void RemoveStop(Stop stop)
+    {
+        Stops.Remove(stop);
+        SynchronizeStops();
+    }
 
 }
