@@ -75,27 +75,24 @@ public class ConsoleUI
                         .Title("What do you want to do?")
                         .AddChoices(new[] 
                         {
-                            "add stop", "delete stop", "list stops", "end"
+                            "show busiest stop", "add stop", "delete stop", "list stops", "end"
                         }));
 
                 if (command == "add stop")
                 {
-
                     var newStopName = AnsiConsole.Prompt(new TextPrompt<string>("Enter new stop name:"));
                     dataManager.AddStop(new Stop(newStopName));
-
                 } else if (command == "delete stop")
-                {
 
+                {
                     Stop selectedStop = AnsiConsole.Prompt(
                         new SelectionPrompt<Stop>()
                             .Title("Select a stop")
                             .AddChoices(dataManager.Stops));
                     dataManager.RemoveStop(selectedStop);
-
                 } else if (command == "list stops")
-                {
 
+                {
                     var table = new Table();
                     table.AddColumn("Stops");
                     foreach (var stop in dataManager.Stops)
@@ -103,7 +100,11 @@ public class ConsoleUI
                         table.AddRow(stop.Name);
                     }                    
                     AnsiConsole.Write(table);
+                } else if (command == "show busiest stop")
 
+                {
+                    var result = Reporter.FindBusiestStop(dataManager.PassengerData);
+                    Console.WriteLine("The busiest stop is: " + result.Name);
                 }
 
             } while (command != "end");
